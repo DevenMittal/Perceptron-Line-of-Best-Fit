@@ -21,7 +21,7 @@ namespace Perceptron_Line_of_Best_Fit
         Graphics gfx;
         Bitmap canvas;
         Pen drawingPen;
-        List<Point> points;
+        List<doublePoint> points;
         Perceptron perceptron;
 
 
@@ -34,7 +34,7 @@ namespace Perceptron_Line_of_Best_Fit
 
             gfx = Graphics.FromImage(canvas);
 
-            points= new List<Point>();  
+            points= new List<doublePoint>();  
             gfx.Clear(Color.White);
 
             // gfx.DrawEllipse(drawingPen, 100, 100, 3, 3);
@@ -55,12 +55,12 @@ namespace Perceptron_Line_of_Best_Fit
             gfx.Clear(Color.White);
             for (int i = 0; i < points.Count; i++)
             {
-                gfx.DrawEllipse(drawingPen, points[i].X + pictureBox1.Width / 2,pictureBox1.Height/2 - points[i].Y, 3, 3);
+                gfx.DrawEllipse(drawingPen, (float)points[i].x + pictureBox1.Width / 2,pictureBox1.Height/2 - (float)points[i].y, 3, 3);
             }
             DrawAxis();
-            
-            
-            
+
+            gfx.DrawLine(drawingPen, new Point(-pictureBox1.Width / 2 + pictureBox1.Width / 2, (pictureBox1.Height / 2 + (int)((-perceptron.weights[0] / perceptron.weights[1]) * -pictureBox1.Width / 2 - perceptron.bias / perceptron.weights[1]))), new Point(pictureBox1.Width / 2 + pictureBox1.Width / 2, (pictureBox1.Height / 2 + (int)((-perceptron.weights[0] / perceptron.weights[1]) * pictureBox1.Width / 2 - perceptron.bias / perceptron.weights[1]))));
+
             pictureBox1.Image = canvas;
 
         }
@@ -70,13 +70,32 @@ namespace Perceptron_Line_of_Best_Fit
             {
                 int xPoint = int.Parse(textBox1.Text);
                 int yPoint = int.Parse(textBox2.Text);
-                points.Add(new Point(xPoint, yPoint));
+                points.Add(new doublePoint(xPoint, yPoint));
+
+                double[][] inputs = new double[points.Count][];
+                double[] desiredOutput = new double[points.Count];
+                for (int i = 0; i < points.Count; i++)
+                {
+                    inputs[i] = new double[1];
+                    inputs[i][0] = points[i].x;
+                    //inputs[i][1] = points[i].y;
+                    desiredOutput[i] = points[i].y; 
+                }
+                perceptron.bias = .5;
+                perceptron.weights[0] = .5;
+                perceptron.weights[1] = .5;
+                for (int i = 0; i < 100000; i++)
+                {
+                    perceptron.TrainWithHillClimbingGate(inputs, desiredOutput);
+
+                }
                 DrawPoints();
 
-             
-                perceptron.TrainWithHillClimbingGate()
+
             }
         }
+
+        
         public void DrawAxis()
         {
             gfx.DrawLine(drawingPen, new Point(pictureBox1.Width / 2, 0), new Point(pictureBox1.Width / 2, pictureBox1.Height));

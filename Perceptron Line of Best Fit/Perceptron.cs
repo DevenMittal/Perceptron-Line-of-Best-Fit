@@ -10,8 +10,8 @@ namespace Perceptron_Line_of_Best_Fit
 
     public class Perceptron
     {
-        double[] weights;
-        double bias;
+        public double[] weights;
+        public double bias;
         double mutationAmount;
         Random random;
         Func<double, double, double> errorFunc;
@@ -69,9 +69,7 @@ namespace Perceptron_Line_of_Best_Fit
             for (int i = 0; i < inputs.Length; i++)
             {
                 double temp = Compute(inputs[i]);
-                if (temp < .50) sums[i] = 0;
-
-                else sums[i] = 1;
+                sums[i] = temp;
             }
             return sums;
             /*computes the output for each row of inputs*/

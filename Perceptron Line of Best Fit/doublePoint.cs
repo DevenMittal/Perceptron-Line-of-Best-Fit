@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Perceptron_Line_of_Best_Fit
 {
-    internal class doublePoint
+    public class doublePoint
     {
         public double x; 
         public double y;
